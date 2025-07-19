@@ -1,0 +1,48 @@
+#importação das bibliotecas necessárias
+import cv2 
+import numpy as np
+import urllib.request
+import matplotlib.pyplot as plt
+from io import BytesIO
+
+# Função para baixar a imagem da web
+def download_image(url):
+    req = urllib.request.urlopen(url)
+    arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+    img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+    return img
+
+# URL da imagem 
+image_url = "https://media.istockphoto.com/id/1224326896/pt/foto/empty-m30-highway-in-madrid-during-covid-19-pandemic-outbreak-and-quarantine.jpg?s=1024x1024&w=is&k=20&c=Sxso4HncbHUhQdDRR1YvQue-roygx5I6_-1JWcWl23A="  # Substitua por uma URL válida
+
+# Baixar e carregar a imagem
+img_color = download_image(image_url)
+
+# Converter para níveis de cinza
+img_gray = cv2.cvtColor(img_color, cv2.COLOR_BGR2GRAY)
+
+# Aplicar binarização com limiar (threshold)
+_, img_binary = cv2.threshold(img_gray, 128, 255, cv2.THRESH_BINARY)
+
+# Exibir as imagens no Colab
+plt.figure(figsize=(20, 5))
+
+# Imagem original
+plt.subplot(1, 3, 1)
+plt.title("Imagem Original_Colorida")
+plt.imshow(cv2.cvtColor(img_color, cv2.COLOR_BGR2RGB))
+plt.axis('off')
+
+# Imagem em níveis de cinza
+plt.subplot(1, 3, 2)
+plt.title("Níveis de Cinza")
+plt.imshow(img_gray, cmap='gray')
+plt.axis('off')
+
+# Imagem binarizada
+plt.subplot(1, 3, 3)
+plt.title("Preto e Branco")
+plt.imshow(img_binary, cmap='gray')
+plt.axis('off')
+
+plt.show()
